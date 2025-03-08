@@ -1,0 +1,85 @@
+/*通用*/
+*{ margin:0; padding:0;}
+*, ::after, ::before {-webkit-box-sizing:border-box;box-sizing:border-box;}
+html{}
+body{margin:0;color:#252525; position: relative;/*font-family:PingFang SC,Microsoft YaHei,Helvetica Neue,Hiragino Sans GB,WenQuanYi Micro Hei,Arial,Open Sans,"sans-serif";*/ background:#FFFEF4; font-size:12px; min-width:1280px;}
+ul,li,p,h1,h2,h3,h4,h5,h6,dl,dt,dd {margin:0px;padding:0px;border:none;list-style:none; font-weight: normal;}
+a{text-decoration:none;  text-shadow:none;font-weight:normal;}
+ul{list-style:none;}
+textarea,input,button,select{outline:none;-webkit-appearance:none; font-family:Arial, Helvetica, sans-serif;}
+a{color:#6c6c6c;text-decoration:none;}
+img{border:none; display: block;}
+span{margin:0; padding:0; cursor: auto;}
+span:focus,div:focus {outline: none;}
+img[src=''],img[src=' '],img:not([src]){ opacity: 0;}
+
+.flex{display:-webkit-box;display: -ms-flexbox;display:flex;flex-wrap:wrap;align-items:flex-start;}
+.flexC{display:-webkit-box;display: -ms-flexbox;display:flex;align-items:center; flex-wrap:wrap;}
+.fl-bet{-webkit-box-pack: justify;-ms-flex-pack: justify;justify-content:space-between;}
+.fl-cen{-webkit-box-pack: center;-ms-flex-pack: center;justify-content:center;}
+.fl-end{-webkit-box-pack:right;-ms-flex-pack:right;justify-content:flex-end;}
+.Huans {-webkit-box-sizing:border-box;box-sizing:border-box;}
+/*header*/
+.header{width:100%;position:static;top:0; left:0;right:0; margin:0 auto;z-index: 9;background:#333F51}
+.headK{ width:100%;width:1400px;margin:0 auto; height:60px;}
+.hdlogo{ display:block;height:100%; margin-right:40px;}
+.hdlogo img{height:100%; display: block;}
+/*Menu*/
+.Menu{}
+.Menu li{position: relative; margin-right: 50px;}
+.MenuA{ line-height:60px;font-size:20px;color:#FFF; position: relative; display: block;font-weight:700;}
+.Menu li .on,.Menu li .MenuA:hover,.Menu li .menuO{color:#f8c343;} 
+/*搜索*/
+.hdsea{width:347px;height: 39px;background:#F4FAF5;border:1px solid #eee;border-radius:10px;padding-right: 12px;padding-left:25px;margin-left: 50px;}
+.hdseaA{width:23px;height: 23px;background-image: url("../images/icon/search.png");background-position: center;background-repeat: no-repeat;background-size: 100%;display: block;}
+.hdseaI{width:100%;flex:1;background:none;border:none;color:#333;font-size:14px;line-height:35px;height: 35px;}
+.hdBut{font-size:20px; font-weight:700;line-height:50px;display: block;color:#FFF;margin-left: auto;}
+.hdBut:hover{color:#f8c343;} 
+
+
+.top{width:40px; height:40px;position: fixed;z-index:80;right:3%;bottom:30px;}
+.top img{width:100%;display: block;}
+.top:hover{box-shadow:0 0 10px rgba(0,0,0,0.2)}
+@media only screen and (max-width:1680px){
+.headK{width:1200px;height:54px;}
+.hdlogo{ margin-right:35px;}
+/*Menu*/
+.Menu{}
+.Menu li{position: relative; margin-right:40px;}
+.MenuA{ line-height:54px;font-size:18px;}
+/*搜索*/
+.hdsea{width:320px;height:37px;border-radius:8px;padding-right:10px;padding-left:18px;margin-left:40px;}
+.hdseaA{width:20px;height: 20px;}
+.hdseaI{font-size:13px;line-height:31px;height: 31px;}
+.hdBut{font-size:18px;line-height:41px;}
+	
+.top{width:35px; height:35px;bottom:20px;}
+}
+
+
+.Run{transition:All 0.6s ease-in-out;-webkit-transition:All 0.6s ease-in-out;-moz-transition:All 0.6s ease-in-out;-o-transition:All 0.6s ease-in-out;}
+.Run:hover{transform:rotate(180deg);-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-o-transform:rotate(180deg);-ms-transform: rotate(180deg);}
+.Mover{transition:0.5s;transition:All 0.4s ease-in-out;-webkit-transition:All 0.4s ease-in-out;-moz-transition:All 0.4s ease-in-out;-o-transition:All 0.4s ease-in-out;}
+.Mover:hover{transition:0.5s;ransform:translate(0,-5px);-webkit-transform:translate(0,-5px);-moz-transform:translate(0,-5px);-o-transform:translate(0,-5px);-ms-transform:translate(0,-10px);}
+.enlarge img{ width:100%;transition:0.5s;}
+.enlarge:hover img{-ms-transform:scale(1.05);-moz-transform:scale(1.05);-webkit-transform:scale(1.05);-o-transform:scale(1.05);transform:scale(1.05); transition:0.5s;}
+
+
+.overH{overflow:auto}
+.overH::-webkit-scrollbar{width:3px;height:0;}/*滚动条整体样式*/
+.overH::-webkit-scrollbar-thumb{background:#1393cc; border-radius:4px}/*滚动条里面小方块*/
+.overH::-webkit-scrollbar-track{background:rgba(255,255,255,0.2);}/*滚动条里面轨道*/
+/*
+height: calc(100% - 140px)
+display:flex;justify-content:space-between;align-items:center; flex-wrap:wrap;align-content:center
+|flex-start|flex-end|center|space-between|space-around
+
+overflow: hidden;text-overflow:ellipsis;white-space: nowrap;
+display:-webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;
+
+left:0;top:50%;transform: translate(0,-50%);
+
+transition:0.5s;
+.IndEnvT:before,.IndEnvT:after{display:block;content:'';position: absolute;}
+*/
+

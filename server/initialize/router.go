@@ -42,6 +42,7 @@ func Routers() *gin.Engine {
 
 	systemRouter := router.RouterGroupApp.System
 	exampleRouter := router.RouterGroupApp.Example
+	filmRouter := router.RouterGroupApp.Film
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -96,6 +97,8 @@ func Routers() *gin.Engine {
 		exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup)    // 文件上传下载功能路由
 		exampleRouter.InitAttachmentCategoryRouterRouter(PrivateGroup) // 文件上传下载分类
 
+		// 新增电影模块路由注册
+		filmRouter.InitFilmRouter(PublicGroup) // 注册电影路由到公共组（无需鉴权）
 	}
 
 	//插件路由安装

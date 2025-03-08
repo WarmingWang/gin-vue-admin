@@ -27,8 +27,10 @@ export default ({ mode }) => {
 
   const optimizeDeps = {}
 
+  // 在alias配置中添加
   const alias = {
     '@': path.resolve(__dirname, './src'),
+    'film': path.resolve(__dirname, './public/film'),
     vue$: 'vue/dist/vue.runtime.esm-bundler.js'
   }
 

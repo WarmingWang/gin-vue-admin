@@ -1,10 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/login'
-  },
+  // {
+  //   path: '/',
+  //   redirect: '/login'
+  // },
   {
     path: '/init',
     name: 'Init',
@@ -29,6 +29,23 @@ const routes = [
       closeTab: true
     },
     component: () => import('@/view/error/index.vue')
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import('@/view/home/index.vue'),
+    meta: { title: '首页' }
+  },
+  {
+    path: '/film',
+    name: 'Film',
+    component: () => import('@/view/film/index.vue'),
+    meta: { title: '影视' }
+  },
+  {
+    path: '/',
+    redirect: '/home',   // 将根路径重定向到首页
+    hidden: true
   },
 ]
 
