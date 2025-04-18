@@ -19,9 +19,10 @@ type Actor struct {
 }
 
 type Rating struct {
-	MovieID    uint    `json:"movieid" gorm:"column:movie_id"`       // 电影 ID
-	PlatformID uint    `json:"platformid" gorm:"column:platform_id"` // 评分平台 ID
-	Score      float64 `json:"rating" gorm:"column:rating"`          // 评分值
+	MovieID    uint           `json:"movieid" gorm:"column:movie_id"`                      // 电影 ID
+	PlatformID uint           `json:"platformid" gorm:"column:platform_id"`                // 评分平台 ID
+	Score      float64        `json:"rating" gorm:"column:rating"`                         // 评分值
+	Platform   RatingPlatform `json:"platform" gorm:"foreignKey:PlatformID;references:ID"` // 关联评分平台
 }
 
 // 评分平台
@@ -29,6 +30,12 @@ type RatingPlatform struct {
 	ID   uint   `json:"-" gorm:"primaryKey"`
 	Name string `json:"name" gorm:"column:name"` // 评分平台名称
 	Icon string `json:"icon" gorm:"column:icon"` // 图标
+}
+
+// MovieActor 电影与演员的多对多关联表
+type MovieActor struct {
+	MovieID uint `json:"movie_id" gorm:"column:movie_id"`
+	ActorID uint `json:"actor_id" gorm:"column:actor_id"`
 }
 
 func (Rating) TableName() string {
@@ -45,4 +52,8 @@ func (Movie) TableName() string {
 
 func (Actor) TableName() string {
 	return "actors"
+}
+
+func (MovieActor) TableName() string {
+	return "movie_actors"
 }

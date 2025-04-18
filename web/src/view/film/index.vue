@@ -141,10 +141,11 @@ const truncate = (text, length) => {
 const loadFilms = async () => {
   try {
     const res = await getFilmList({ page: 1, pageSize: 10 }); // 根据实际API调整参数
-    films.value = res.data.list.map(item => ({
-      ...item,
-      ratings: JSON.parse(item.ratings)
-    }));
+    if (res.code === 0) {  // 添加状态码检查
+      films.value = res.data.list;  // 直接使用返回的数据，不需要额外解析
+    } else {
+      throw new Error(res.msg || '加载失败');
+    }
   } catch (e) {
     console.error('加载电影数据失败:', e);
   }

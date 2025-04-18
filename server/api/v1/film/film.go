@@ -2,12 +2,14 @@ package film
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/film"
 	"github.com/flipped-aurora/gin-vue-admin/server/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type FilmApi struct{}
@@ -72,4 +74,28 @@ func (a *FilmApi) GetActors(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(actors, "获取成功", c)
+}
+
+// DeleteMovie 删除电影
+// @Summary 删除电影
+// @Tags Film
+// @Accept json
+// @Produce json
+// @Param id path int true "电影ID"
+// @Success 200 {object} response.Response{msg=string} "删除成功"
+// @Router /film/delete/{id} [delete]
+func (a *FilmApi) DeleteMovie(c *gin.Context) {
+	id := c.Param("id")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		response.FailWithMessage("无效的电影ID", c)
+		return
+	}
+
+	if err := filmService.DeleteMovie(uint(movieID)); err != nil {
+		response.FailWithMessage("删除失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("删除成功", c)
 }

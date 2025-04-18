@@ -59,36 +59,43 @@
       </el-form-item>
       <!-- 在演员表单项后添加评分设置 -->
       <el-form-item label="评分设置">
-        <div v-for="(rating, index) in movie.ratings" :key="index" class="rating-item">
-          <el-select
-            v-model.number="rating.platform"
-            placeholder="选择平台"
-            style="width: 200px; margin-right: 10px;"
-          >
-            <el-option
-              v-for="item in platformOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+        <div class="rating-container">
+          <div v-for="(rating, index) in movie.ratings" :key="index" class="rating-item">
+            <el-select
+              v-model="rating.platform"
+              placeholder="选择平台"
+              style="width: 200px; margin-right: 10px;"
+            >
+              <el-option
+                v-for="item in platformOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                :disabled="selectedPlatforms.includes(item.value) && item.value !== rating.platform"
+              />
+            </el-select>
+
+            <el-input
+              v-model.number="rating.rating"
+              type="number"
+              placeholder="分数"
+              style="width: 120px; margin-right: 10px;"
+              step="0.1"
+              min="0"
+              max="10"
             />
-          </el-select>
-          <el-input
-            v-model.number="rating.rating"
-            type="number"
-            placeholder="分数"
-            style="width: 120px; margin-right: 10px;"
-            step="0.1"
-            min="0"
-            max="10"
-          />
-          <el-button
-            type="danger"
-            icon="el-icon-delete"
-            circle
-            @click="removeRating(index)"
-          />
+            <el-button type="danger" circle @click="removeRating(index)">
+              <el-icon><Delete /></el-icon>
+            </el-button>
+          </div>
+          <div class="rating-actions">
+            <el-button 
+              type="primary" 
+              @click="addRating"
+              :disabled="isMaxPlatforms"
+            >添加评分</el-button>
+          </div>
         </div>
-        <el-button type="primary" @click="addRating">添加评分</el-button>
       </el-form-item>
 
       <el-form-item>
@@ -120,12 +127,22 @@ export default {
       actors: [],
       genresOptions: [],
       platformOptions: [
-        { value: '1', label: '豆瓣' },
-        { value: '2', label: 'Letterboxd' },
-        { value: '3', label: 'IMDb' },
-        { value: '4', label: 'Eiga' }
+        { value: 1, label: '豆瓣' },
+        { value: 2, label: 'Letterboxd' },
+        { value: 3, label: 'IMDb' },
+        { value: 4, label: 'Eiga' }
       ]
     };
+  },
+  computed: {
+    // 获取已选择的平台值
+    selectedPlatforms() {
+      return this.movie.ratings.map(rating => rating.platform);
+    },
+    // 判断是否达到最大平台数
+    isMaxPlatforms() {
+      return this.movie.ratings.length >= 4;
+    }
   },
   created() {
     this.getGenresDict();
@@ -163,31 +180,25 @@ export default {
     submitMovie() {
       const payload = {
         ...this.movie,
-        genres: this.movie.genres.join(','), // 转换为逗号分隔字符串
+        genres: this.movie.genres.join(','),
         actors: this.actors.filter(actor =>
             this.movie.actors.includes(actor.id)
         ),
         ratings: this.movie.ratings.map(rating => ({
-          platform: rating.platform,
+          platformid: parseInt(rating.platform),
           rating: rating.rating
         }))
       };
 
       createMovie(payload)
           .then(response => {
-            // 添加业务状态码判断
-            if (response.code === 200) {
-              this.$message.success("电影创建成功");
-            } else {
-              throw new Error(response.msg || "未知错误");
+            if (response.code === 0) {
+              this.$message.success(response.msg || "电影创建成功");
+              // 创建成功后可以添加跳转或其他操作
             }
           })
           .catch(error => {
-            // 增强错误处理
-            const errorMsg = error.response?.data?.msg ||
-                error.message ||
-                "服务器连接失败";
-            this.$message.error("创建失败: " + errorMsg);
+            console.error(error);
           });
     }
   }
@@ -209,5 +220,21 @@ export default {
 .upload-button {
   /* 移除绝对定位相关属性 */
   margin: 0;
+}
+
+.rating-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rating-actions {
+  margin-top: 12px;
 }
 </style>

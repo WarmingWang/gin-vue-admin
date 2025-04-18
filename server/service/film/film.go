@@ -48,9 +48,13 @@ func (f *FilmService) CreateMovie(movie *film.Movie) error {
 		}
 	}
 
-	// 如果有评分信息，更新 movie_ratings 关联表
+	// 如果有评分信息，使用Append而不是Replace
 	if len(movie.Ratings) > 0 {
-		if err := db.Model(&movie).Association("Ratings").Replace(movie.Ratings); err != nil {
+		// 为每个评分设置MovieID
+		for i := range movie.Ratings {
+			movie.Ratings[i].MovieID = movie.ID
+		}
+		if err := db.Model(&movie).Association("Ratings").Append(movie.Ratings); err != nil {
 			db.Rollback()
 			return err
 		}
@@ -64,4 +68,35 @@ func (m *FilmService) GetActors() ([]film.Actor, error) {
 	var actors []film.Actor
 	err := global.GVA_DB.Find(&actors).Error
 	return actors, err
+}
+
+// DeleteMovie 删除电影
+func (s *FilmService) DeleteMovie(id uint) error {
+	// 开启事务
+	tx := global.GVA_DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// 删除电影相关的评分
+	if err := tx.Where("movie_id = ?", id).Delete(&film.Rating{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除电影与演员的关联
+	if err := tx.Where("movie_id = ?", id).Delete(&film.MovieActor{}).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 删除电影
+	if err := tx.Delete(&film.Movie{}, id).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit().Error
 }

@@ -17,6 +17,14 @@ export function createMovie(data) {
   })
 }
 
+// 删除电影
+export function deleteMovie(id) {
+  return request({
+    url: `/film/delete/${id}`,
+    method: 'delete'
+  })
+}
+
 export function getActors() {
   return request({
     url: '/film/actors',
