@@ -125,7 +125,7 @@ import { ref, onMounted } from 'vue';
 import { getFilmList } from '@/api/film';
 import { getDict, showDictLabel } from '@/utils/dictionary';
 
-const baseFileUrl = ref(import.meta.env.VITE_BASE_API + '/')
+const baseFileUrl = ref(import.meta.env.VITE_BASE_API)
 
 // 初始化空数组
 const films = ref([]);

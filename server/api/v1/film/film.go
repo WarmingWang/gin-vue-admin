@@ -2,6 +2,7 @@ package film
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 
@@ -98,4 +99,63 @@ func (a *FilmApi) DeleteMovie(c *gin.Context) {
 	}
 
 	response.OkWithMessage("删除成功", c)
+}
+
+// UpdateMovie 更新电影信息
+// @Summary 更新电影
+// @Tags Film
+// @Accept json
+// @Produce json
+// @Param id path int true "电影ID"
+// @Param data body film.Movie true "电影信息"
+// @Success 200 {object} response.Response{msg=string} "更新成功"
+// @Router /film/edit/{id} [put]
+func (a *FilmApi) UpdateMovie(c *gin.Context) {
+	id := c.Param("id")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		response.FailWithMessage("无效的电影ID", c)
+		return
+	}
+
+	var movie film.Movie
+	if err := c.ShouldBindJSON(&movie); err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	if err := filmService.UpdateMovie(uint(movieID), &movie); err != nil {
+		response.FailWithMessage("更新失败: "+err.Error(), c)
+		return
+	}
+
+	response.OkWithMessage("更新成功", c)
+}
+
+// GetMovieDetail 获取电影详情
+// @Summary 获取电影详情
+// @Tags Film
+// @Produce json
+// @Param id path int true "电影ID"
+// @Success 200 {object} response.Response{data=film.Movie} "获取成功"
+// @Router /film/detail/{id} [get]
+func (a *FilmApi) GetMovieDetail(c *gin.Context) {
+	id := c.Param("id")
+	movieID, err := strconv.Atoi(id)
+	if err != nil {
+		response.FailWithMessage("无效的电影ID", c)
+		return
+	}
+
+	movie, err := filmService.GetMovieDetail(uint(movieID))
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			response.FailWithMessage("电影不存在", c)
+		} else {
+			response.FailWithMessage("获取失败: "+err.Error(), c)
+		}
+		return
+	}
+
+	response.OkWithDetailed(movie, "获取成功", c)
 }

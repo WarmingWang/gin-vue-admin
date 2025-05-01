@@ -31,3 +31,21 @@ export function getActors() {
     method: 'get'
   })
 }
+
+// 电影详情获取方法
+export function getMovieDetail(id) {
+  return request({
+    url: `/film/detail/${id}`,
+    method: 'get'
+  })
+}
+
+// 电影更新方法
+export function updateMovie(data) {
+  const id = data.id;
+  return request({
+    url: `/film/edit/${id}`,
+    method: 'put',
+    data
+  })
+}

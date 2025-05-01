@@ -100,3 +100,59 @@ func (s *FilmService) DeleteMovie(id uint) error {
 
 	return tx.Commit().Error
 }
+
+// UpdateMovie 更新电影及关联数据
+func (s *FilmService) UpdateMovie(id uint, movie *film.Movie) error {
+	tx := global.GVA_DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// 更新基础信息
+	if err := tx.Model(&film.Movie{}).Where("id = ?", id).Updates(movie).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 更新演员关联
+	if err := tx.Model(&film.Movie{ID: id}).Association("MovieActors").Replace(movie.MovieActors); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	// 更新评分（先删除旧评分再添加新评分）
+	if len(movie.Ratings) > 0 {
+		if err := tx.Where("movie_id = ?", id).Delete(&film.Rating{}).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+		for i := range movie.Ratings {
+			movie.Ratings[i].MovieID = id
+		}
+		if err := tx.Create(&movie.Ratings).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	return tx.Commit().Error
+}
+
+func (s *FilmService) GetMovieDetail(id uint) (*film.Movie, error) {
+	var movie film.Movie
+	// 修改预加载方式
+	err := global.GVA_DB.
+		Preload("MovieActors", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id, name, avatar") // 直接选择需要的演员字段
+		}).
+		Preload("Ratings.Platform").
+		Where("id = ?", id).
+		First(&movie).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &movie, nil
+}

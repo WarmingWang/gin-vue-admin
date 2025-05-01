@@ -14,6 +14,8 @@ func (s *FilmRouter) InitFilmRouter(Router *gin.RouterGroup) {
 		filmRouter.GET("list", filmApi.GetFilmList)          // 电影列表接口
 		filmRouter.POST("create", filmApi.CreateMovie)       // 创建电影
 		filmRouter.GET("actors", filmApi.GetActors)          // 新增演员列表路由
-		filmRouter.DELETE("delete/:id", filmApi.DeleteMovie) // 修改后的删除接口路径
+		filmRouter.DELETE("delete/:id", filmApi.DeleteMovie) // 删除接口
+		filmRouter.GET("detail/:id", filmApi.GetMovieDetail) // 电影详情接口
+		filmRouter.PUT("edit/:id", filmApi.UpdateMovie)      // 电影更新接口
 	}
 }
