@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/film"
 	"github.com/flipped-aurora/gin-vue-admin/server/service"
@@ -16,26 +15,25 @@ import (
 type FilmApi struct{}
 
 func (m *FilmApi) GetFilmList(c *gin.Context) {
-	fmt.Println("GetFilmList...")
-	var pageInfo request.PageInfo
-	if err := c.ShouldBindQuery(&pageInfo); err != nil {
+
+	var params film.MovieSearch
+	if err := c.ShouldBindQuery(&params); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	// 添加服务调用和错误处理
-	list, total, err := service.ServiceGroupApp.FilmServiceGroup.GetFilmList(pageInfo)
+	// 修改服务层调用，传递完整查询参数
+	list, total, err := service.ServiceGroupApp.FilmServiceGroup.GetFilmList(params)
 	if err != nil {
 		response.FailWithMessage("获取失败", c)
 		return
 	}
-
 	// 返回分页数据结构
 	response.OkWithDetailed(response.PageResult{
 		List:     list,
 		Total:    total,
-		Page:     pageInfo.Page,
-		PageSize: pageInfo.PageSize,
+		Page:     params.Page,
+		PageSize: params.PageSize,
 	}, "获取成功", c)
 }
 

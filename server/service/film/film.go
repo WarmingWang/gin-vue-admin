@@ -2,25 +2,43 @@ package film
 
 import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/film"
 	"gorm.io/gorm"
+	"strings"
 )
 
 type FilmService struct{}
 
-func (f *FilmService) GetFilmList(info request.PageInfo) (list interface{}, total int64, err error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
+func (f *FilmService) GetFilmList(params film.MovieSearch) (list interface{}, total int64, err error) {
+	// 修改参数类型为film.MovieSearch
 	db := global.GVA_DB.Model(&film.Movie{})
+
+	// 添加查询条件
+	if params.Title != "" {
+		db = db.Where("title LIKE ?", "%"+params.Title+"%")
+	}
+	if params.Director != "" {
+		db = db.Where("director LIKE ?", "%"+params.Director+"%")
+	}
+	if params.Year > 0 {
+		db = db.Where("year = ?", params.Year)
+	}
+	if len(params.Genres) > 0 {
+		db = db.Where("genres LIKE ?", "%"+strings.Join(params.Genres, ",")+"%")
+	}
+	limit := params.PageSize
+	offset := params.PageSize * (params.Page - 1)
 
 	var filmList []film.Movie
 	err = db.Count(&total).Error
 	if err != nil {
 		return
 	}
-	db = db.Debug()
-	err = db.Preload("MovieActors").Preload("Ratings.Platform").Scopes(Paginate(offset, limit)).Find(&filmList).Error
+
+	err = db.Preload("MovieActors").
+		Preload("Ratings.Platform").
+		Scopes(Paginate(offset, limit)).
+		Find(&filmList).Error
 
 	return filmList, total, err
 }

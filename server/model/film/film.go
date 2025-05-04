@@ -1,5 +1,7 @@
 package film
 
+import "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
+
 type Movie struct {
 	ID          uint     `json:"id" gorm:"primaryKey"`
 	Title       string   `json:"title" gorm:"comment:标题"`
@@ -56,4 +58,13 @@ func (Actor) TableName() string {
 
 func (MovieActor) TableName() string {
 	return "movie_actors"
+}
+
+// 在电影模型中新增搜索参数结构体
+type MovieSearch struct {
+	request.PageInfo
+	Title    string   `form:"title"`
+	Director string   `form:"director"`
+	Year     int      `form:"year"`
+	Genres   []string `form:"genres[]"`
 }

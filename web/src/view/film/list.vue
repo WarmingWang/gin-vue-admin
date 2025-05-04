@@ -1,8 +1,8 @@
 <template>
   <div class="film-list-container">
     <!-- 搜索区域 -->
-    <div class="search-area">
-      <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+    <div class="gva-search-box">
+      <el-form :inline="true" :model="searchForm">
         <el-form-item label="电影名称">
           <el-input v-model="searchForm.title" placeholder="请输入电影名称" clearable />
         </el-form-item>
@@ -612,13 +612,6 @@ export default {
 <style scoped>
 .film-list-container {
   padding: 20px;
-}
-
-.search-area {
-  margin-bottom: 20px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 4px;
 }
 
 .operation-area {
