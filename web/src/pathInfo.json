@@ -18,8 +18,6 @@
   "/src/view/example/index.vue": "Example",
   "/src/view/example/upload/scanUpload.vue": "scanUpload",
   "/src/view/example/upload/upload.vue": "Upload",
-  "/src/view/film/create.vue": "Create",
-  "/src/view/film/edit.vue": "Edit",
   "/src/view/film/index.vue": "Index",
   "/src/view/film/list.vue": "List",
   "/src/view/home/index.vue": "Index",
